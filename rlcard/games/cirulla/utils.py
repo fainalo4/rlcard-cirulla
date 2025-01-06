@@ -1,55 +1,19 @@
-import os
-import json
-import numpy as np
-from collections import OrderedDict
 
 import rlcard
 
-from rlcard.games.uno.card import UnoCard as Card
-
-# Read required docs
-ROOT_PATH = rlcard.__path__[0]
-
-# a map of abstract action to its index and a list of abstract action
-with open(os.path.join(ROOT_PATH, 'games/uno/jsondata/action_space.json'), 'r') as file:
-    ACTION_SPACE = json.load(file, object_pairs_hook=OrderedDict)
-    ACTION_LIST = list(ACTION_SPACE.keys())
-
-# a map of color to its index
-COLOR_MAP = {'r': 0, 'g': 1, 'b': 2, 'y': 3}
-
-# a map of trait to its index
-TRAIT_MAP = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
-             '8': 8, '9': 9, 'skip': 10, 'reverse': 11, 'draw_2': 12,
-             'wild': 13, 'wild_draw_4': 14}
-
-WILD = ['r-wild', 'g-wild', 'b-wild', 'y-wild']
-
-WILD_DRAW_4 = ['r-wild_draw_4', 'g-wild_draw_4', 'b-wild_draw_4', 'y-wild_draw_4']
+from rlcard.games.cirulla.card import CirullaCard as Card
 
 
 def init_deck():
-    ''' Generate uno deck of 108 cards
+    ''' Initialize a Cirulla deck of 40 cards
+
+    Returns:
+        (list): A list of Card object
     '''
-    deck = []
-    card_info = Card.info
-    for color in card_info['color']:
-
-        # init number cards
-        for num in card_info['trait'][:10]:
-            deck.append(Card('number', color, num))
-            if num != '0':
-                deck.append(Card('number', color, num))
-
-        # init action cards
-        for action in card_info['trait'][10:13]:
-            deck.append(Card('action', color, action))
-            deck.append(Card('action', color, action))
-
-        # init wild cards
-        for wild in card_info['trait'][-2:]:
-            deck.append(Card('wild', color, wild))
-    return deck
+    suit_list = ['S', 'H', 'D', 'C']
+    rank_list = ['A', '2', '3', '4', '5', '6', '7', 'J', 'Q', 'K']
+    res = [Card(suit, rank) for suit in suit_list for rank in rank_list]
+    return res
 
 
 def cards2list(cards):
