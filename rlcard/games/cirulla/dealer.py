@@ -1,9 +1,9 @@
 
-from rlcard.games.uno.utils import init_deck
+from rlcard.games.cirulla.utils import init_deck
 
 
-class UnoDealer:
-    ''' Initialize a uno dealer class
+class CirullaDealer:
+    ''' Initialize a Cirulla dealer class
     '''
     def __init__(self, np_random):
         self.np_random = np_random
@@ -19,21 +19,26 @@ class UnoDealer:
         ''' Deal some cards from deck to one player
 
         Args:
-            player (object): The object of DoudizhuPlayer
+            player (object): The object of Player
             num (int): The number of cards to be dealed
         '''
         for _ in range(num):
             player.hand.append(self.deck.pop())
 
-    def flip_top_card(self):
-        ''' Flip top card when a new game starts
+    def flip_top_4_cards(self):
+        ''' Flip top 4 cards when a new game starts 
+            and put them on the board with faces up
 
         Returns:
-            (object): The object of UnoCard at the top of the deck
+            list (object): The list of 4 Cards at the top of the deck
         '''
-        top_card = self.deck.pop()
-        while top_card.trait == 'wild_draw_4':
-            self.deck.append(top_card)
-            self.shuffle()
-            top_card = self.deck.pop()
-        return top_card
+        top_4_cards = []
+        for _ in range(4):
+            top_4_cards.append(self.deck.pop())
+        return top_4_cards
+        
+        # TODO: Implement logic for checking if in the 4 cards:
+        # - there are at least 2 aces
+        # - there are at least 3 cards with the same rank
+        # - there are at least 4 cards with the same rank (victory)
+    
