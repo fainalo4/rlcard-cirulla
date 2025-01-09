@@ -68,3 +68,26 @@ class CirullaCard(Card):
             string: the combination of suit and rank of a card. Eg: 1S, 2H, AD, BJ, RJ...
         '''
         return self.suit+self.rank
+
+class Hand:
+    '''
+    Player's Hand stores a list of cards, with a maximum capacity of 3 cards
+    '''
+    def __init__(self, capacity = 3):
+        self.cards: list[Card] = []
+        self.capacity = capacity
+
+    def add(self, card: Card):
+        if len(self.cards) < self.capacity:
+            self.cards.append(card)
+        else:
+            raise ValueError("The hand is full")
+
+    def remove(self, card: Card):
+        self.cards.remove(card)
+
+    def __str__(self) -> str:
+        s = "["
+        for card in self.cards:
+            s += str(card) + ", "
+        return s[0:-2] + "]"
