@@ -42,3 +42,6 @@ class CirullaDealer:
         # - there are at least 3 cards with the same rank
         # - there are at least 4 cards with the same rank (victory)
     
+    def is_deck_empty(self) -> bool:
+        return len(self.deck) == 0
+    
