@@ -1,4 +1,20 @@
+
 from rlcard.games.cirulla.card import Card  
+
+UTIL_DICT = {
+        1: "A",
+        2: "2",
+        3: "3",
+        4: "4",
+        5: "5",
+        6: "6",
+        7: "7",
+        8: "J",
+        9: "Q",
+        10: "K"
+}
+REVERSE_UTIL_DICT = {v: k for k, v in UTIL_DICT.items()}
+
 
 class CirullaCard(Card):
     '''
@@ -7,6 +23,7 @@ class CirullaCard(Card):
     '''
     suit = None
     rank = None
+    value = None
     valid_suit = ['S', 'H', 'D', 'C']
     valid_rank = ['A', '2', '3', '4', '5', '6', '7', 'J', 'Q', 'K']
 
@@ -16,9 +33,11 @@ class CirullaCard(Card):
         Args:
             suit: string, suit of the card, should be one of valid_suit
             rank: string, rank of the card, should be one of valid_rank
+            value: int, value of the card depending on the rank
         '''
         self.suit = suit
         self.rank = rank
+        self.value = REVERSE_UTIL_DICT.get(rank)
 
     def __eq__(self, other):
         if isinstance(other, Card):
