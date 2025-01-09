@@ -1,39 +1,48 @@
-from rlcard.games.uno.card import UnoCard
-from rlcard.games.uno.utils import cards2list, WILD, WILD_DRAW_4
+
+# from rlcard.games.cirulla.card import CirullaCard as Card
+from card import CirullaCard as Card
 
 
-class UnoRound:
+class CirullaRound:
 
     def __init__(self, dealer, num_players, np_random):
         ''' Initialize the round class
 
         Args:
-            dealer (object): the object of UnoDealer
+            dealer (object): the object of CirullaDealer
             num_players (int): the number of players in game
         '''
         self.np_random = np_random
         self.dealer = dealer
-        self.target = None
+        self.board = None
         self.current_player = 0
         self.num_players = num_players
-        self.direction = 1
         self.played_cards = []
         self.is_over = False
         self.winner = None
 
-    def flip_top_card(self):
-        ''' Flip the top card of the card pile
+    def flip_top_4_cards(self):
+        ''' Flip the top 4 cards of the card pile, then put them on the board.
+        Check sum of first 4 cards:
+        - if it is 15 or 30 then the player who flipped the cards gets the cards 
+            and scores 1 or 2 points respectively.
+        - else leaves the cards on the board and the game continues.
 
         Returns:
             (object of UnoCard): the top card in game
 
         '''
-        top = self.dealer.flip_top_card()
-        if top.trait == 'wild':
-            top.color = self.np_random.choice(UnoCard.info['color'])
-        self.target = top
-        self.played_cards.append(top)
-        return top
+        top = self.dealer.flip_top_4_cards()
+
+        top_sum= sum([c.rank for c in top])
+        if top_sum in [15, 30]:
+            self.board = None
+            self.played_cards.extend(top)
+        else:
+            self.board = top            
+        
+        self.current_player = 1
+
 
     def perform_top_card(self, players, top_card):
         ''' Perform the top card
