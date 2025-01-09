@@ -1,6 +1,8 @@
 
-from rlcard.games.cirulla.card import Card  
+from rlcard.games.base import Card
 
+''' Note: 2 dicts are used to convert between rank and value, and vice versa.
+'''
 UTIL_DICT = {
         1: "A",
         2: "2",
