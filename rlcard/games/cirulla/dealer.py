@@ -1,5 +1,6 @@
 
-from rlcard.games.cirulla.utils import init_deck
+# from rlcard.games.cirulla.utils import init_deck
+from utils import init_deck
 
 
 class CirullaDealer:
@@ -34,7 +35,7 @@ class CirullaDealer:
         '''
         top_4_cards = []
         for _ in range(4):
-            top_4_cards.append(self.deck.pop())
+            top_4_cards.append(self.deck.pop(0))
         return top_4_cards
         
         # TODO: Implement logic for checking if in the 4 cards:
