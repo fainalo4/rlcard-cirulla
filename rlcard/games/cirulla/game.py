@@ -5,12 +5,14 @@ import numpy as np
 # from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
 # from rlcard.games.cirulla.player import CirullaPlayer as Player
 # from rlcard.games.cirulla.board import Board, Take
+# from rlcard.games.cirulla.judger import CirullaJudger as Judger
 # from rlcard.games.cirulla.utils import flip_top_4_cards 
 
 from card import CirullaCard as Card
 from dealer import CirullaDealer as Dealer
 from player import CirullaPlayer as Player
 from board import Board, Take
+from judger import CirullaJudger as Judger
 from utils import flip_and_check_top_4_cards, switch_player
 
  
@@ -49,7 +51,6 @@ class CirullaGame:
                 (dict): The first state in one game
                 (int): Current player's id
         '''
-        # flip and check top 4 cards
         flip_and_check_top_4_cards(self)
 
         # Deal 3 cards to each player to prepare for the game
@@ -110,18 +111,6 @@ class CirullaGame:
         '''
         pass
 
-    def get_payoffs(self):
-        ''' Return the payoffs of the game
-
-        Returns:
-            (list): Each entry corresponds to the payoff of one player
-        '''
-        winner = self.round.winner
-        if winner is not None and len(winner) == 1:
-            self.payoffs[winner[0]] = 1
-            self.payoffs[1 - winner[0]] = -1
-        return self.payoffs
-
     def get_legal_actions(self):
         ''' Return the legal actions for current player
 
@@ -139,14 +128,27 @@ class CirullaGame:
         '''
         return self.num_players
 
+    def get_payoffs(self):
+        ''' Return the payoffs of the game
+
+        Returns:
+            (list): Each entry corresponds to the payoff of one player
+        '''
+        winner = self.winner
+        if winner is not None and len(winner) == 1:
+            self.payoffs[winner[0]] = 1
+            self.payoffs[1 - winner[0]] = -1
+        return self.payoffs
+    
     @staticmethod
     def get_num_actions():
         ''' Return the number of applicable actions
 
         Returns:
-            (int): The number of actions. There are 61 actions
+            (int): The number of actions. 
+            There are 40 actions, 1 for each card in the deck
         '''
-        return 61
+        return 40
 
     def get_player_id(self):
         ''' Return the current player's id
@@ -154,7 +156,7 @@ class CirullaGame:
         Returns:
             (int): current player's id
         '''
-        return self.round.current_player
+        return self.current_player_id
 
     def is_over(self):
         ''' Check if the game is over
@@ -162,7 +164,7 @@ class CirullaGame:
         Returns:
             (boolean): True if the game is over
         '''
-        return self.round.is_over
+        return self.is_over
 
 
 # game= CirullaGame()
