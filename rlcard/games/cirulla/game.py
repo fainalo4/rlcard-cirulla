@@ -13,7 +13,7 @@ from dealer import CirullaDealer as Dealer
 from player import CirullaPlayer as Player
 from board import Board, Take
 from judger import CirullaJudger as Judger
-from utils import flip_and_check_top_4_cards, switch_player
+from utils import *
 
  
 
@@ -100,7 +100,7 @@ class CirullaGame:
         self.dealer, self.players, self.round = self.history.pop()
         return True
 
-    def get_state(self, player_id):
+    def get_state(self, player_id: int) -> dict:
         ''' Return player's state
 
         Args:
@@ -109,16 +109,39 @@ class CirullaGame:
         Returns:
             (dict): The state of the player
         '''
-        pass
 
-    def get_legal_actions(self):
-        ''' Return the legal actions for current player
+        state = {}
+        player = self.players[player_id]
+        other_player = self.players[1 - player_id]
+        state['hand'] = cards2list(player.hand)
+        state['other_hand'] = cards2list(other_player.hand)
+        state['board'] = cards2list(self.board.cards)
+        state['won_cards'] = cards2list(player.won_cards)
+        state['other_won_cards'] = cards2list(other_player.won_cards)
+
+        state['legal_actions'] = self.get_legal_actions(player_id)
+
+        # TODO: check if needed this...
+        state['num_cards'] = []
+        for player in self.players:
+            state['num_cards'].append(len(player.hand))
+
+        # TODO: maybe add both the scopa_sum to the state
+
+        return state
+
+    def get_legal_actions(self, player_id: int) -> list[str]:
+        ''' Return the legal actions for a player
 
         Returns:
-            (list): A list of legal actions
+            (list): A list of legal actions (as card strings)
         '''
+        # TODO: add the possibility to choose if "bussare" or not
+        # TODO: check if this function needs the current player or whatever player_id is passed
 
-        return self.round.get_legal_actions(self.players, self.round.current_player)
+        hand = self.players[player_id].hand
+
+        return cards2list(hand)
 
     def get_num_players(self):
         ''' Return the number of players in Limit Texas Hold'em
@@ -174,14 +197,18 @@ class CirullaGame:
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
 # print(game.board.__str__())
 
-# init game with 15/30 sum of first 4 cards in deck 
+# # init game with 15/30 sum of first 4 cards in deck 
 # game= CirullaGame()
-# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
-# print(game.board.__str__())
 # game.dealer.deck[:4]= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3")]
-# print([game.dealer.deck[i].__str__() for i in range(4)])
-# flip_and_check_top_4_cards(game)
-# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
-# print(game.board.__str__())
+# print(f"initial deck: {[game.dealer.deck[i].__str__() for i in range(4)]}")
+# game.init_game()
+# for id in [0,1]:
+#     assert game.get_legal_actions(id) == cards2list(game.players[id].hand)
+# print(game.players[game.current_player_id].__str__())
+# print(f"board: {game.board.__str__()}")
 # switch_player(game)
-# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.players[game.current_player_id].__str__())
+# state= game.get_state(game.current_player_id)
+# for keys,values in state.items():
+#     print(keys)
+#     print(values)
