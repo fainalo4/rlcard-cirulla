@@ -37,11 +37,6 @@ class CirullaDealer:
         for _ in range(4):
             top_4_cards.append(self.deck.pop(0))
         return top_4_cards
-        
-        # TODO: Implement logic for checking if in the 4 cards:
-        # - there are at least 2 aces
-        # - there are at least 3 cards with the same rank
-        # - there are at least 4 cards with the same rank (victory)
     
     def is_deck_empty(self) -> bool:
         return len(self.deck) == 0
