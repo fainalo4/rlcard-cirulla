@@ -45,6 +45,7 @@ class CirullaPlayer:
 
         Args:
             card (Card): The card to be played.
+            take (Take): The take that the card will be used for.
             board (Board): The current state of the game board.
 
         Returns:
