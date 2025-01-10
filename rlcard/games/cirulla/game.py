@@ -113,6 +113,9 @@ class CirullaGame:
         state = {}
         player = self.players[player_id]
         other_player = self.players[1 - player_id]
+        
+        state['num_players'] = self.num_players
+        state['current_player'] = player_id
         state['hand'] = cards2list(player.hand)
         state['other_hand'] = cards2list(other_player.hand)
         state['board'] = cards2list(self.board.cards)
@@ -143,14 +146,6 @@ class CirullaGame:
 
         return cards2list(hand)
 
-    def get_num_players(self):
-        ''' Return the number of players in Limit Texas Hold'em
-
-        Returns:
-            (int): The number of players in the game
-        '''
-        return self.num_players
-
     def get_payoffs(self):
         ''' Return the payoffs of the game
 
@@ -173,14 +168,6 @@ class CirullaGame:
         '''
         return 40
 
-    def get_player_id(self):
-        ''' Return the current player's id
-
-        Returns:
-            (int): current player's id
-        '''
-        return self.current_player_id
-
     def is_over(self):
         ''' Check if the game is over
 
@@ -197,7 +184,7 @@ class CirullaGame:
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
 # print(game.board.__str__())
 
-# # init game with 15/30 sum of first 4 cards in deck 
+# init game with 15/30 sum of first 4 cards in deck 
 # game= CirullaGame()
 # game.dealer.deck[:4]= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3")]
 # print(f"initial deck: {[game.dealer.deck[i].__str__() for i in range(4)]}")
