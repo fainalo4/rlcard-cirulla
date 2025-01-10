@@ -2,6 +2,10 @@
 import rlcard
 
 # from rlcard.games.cirulla.card import CirullaCard as Card
+# from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
+# from rlcard.games.cirulla.player import CirullaPlayer as Player
+# from rlcard.games.cirulla.game import CirullaGame as Game
+
 from card import CirullaCard as Card
 
 def init_deck():
@@ -46,6 +50,49 @@ def hand2dict(hand):
         else:
             hand_dict[card] += 1
     return hand_dict
+
+
+def flip_and_check_top_4_cards(game):
+    ''' Flip the top 4 cards of the card pile, then put them on the board.
+    Check sum of first 4 cards:
+    - if it is 15 or 30 then the player who flipped the cards gets the cards 
+        and scores 1 or 2 points respectively.
+    - else leaves the cards on the board and the game continues.
+
+    Returns:
+        (object of UnoCard): the top card in game
+
+    '''
+
+    # TODO: Implement logic for checking if in the 4 cards:
+    # - there are at least 2 aces
+    # - there are at least 3 cards with the same rank
+    # - there are at least 4 cards with the same rank (victory)
+    # while loop until the condition is met
+    
+    top = game.dealer.flip_top_4_cards()
+
+    top_sum = sum([c.value for c in top])
+    if top_sum in [15, 30]:     
+        points = 1 if top_sum == 15 else 2
+        game.players[game.current_player_id].scopa_sum += points
+        game.players[game.current_player_id].won_cards.extend(top)
+        game.board.cards = []
+    else:
+        game.board.cards = top
+    switch_player(game)
+
+def switch_player(game):
+    ''' Switch to the next player
+
+    Args:
+        game (Game): The current game
+    '''
+    if game.current_player_id == 1:
+        game.current_player_id = 0
+    else:
+        game.current_player_id = 1
+
 
 def encode_hand(plane, hand):
     ''' Encode hand and represerve it into plane
