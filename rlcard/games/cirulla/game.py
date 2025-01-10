@@ -1,18 +1,39 @@
 from copy import deepcopy
 import numpy as np
 
-from rlcard.games.uno import Dealer
-from rlcard.games.uno import Player
-from rlcard.games.uno import Round
+# from rlcard.games.cirulla.card import CirullaCard as Card
+# from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
+# from rlcard.games.cirulla.player import CirullaPlayer as Player
+# from rlcard.games.cirulla.board import Board, Take
+# from rlcard.games.cirulla.utils import flip_top_4_cards 
 
+from card import CirullaCard as Card
+from dealer import CirullaDealer as Dealer
+from player import CirullaPlayer as Player
+from board import Board, Take
+from utils import flip_and_check_top_4_cards, switch_player
 
-class UnoGame:
+ 
+
+class CirullaGame:
 
     def __init__(self, allow_step_back=False, num_players=2):
+        
         self.allow_step_back = allow_step_back
         self.np_random = np.random.RandomState()
+
         self.num_players = num_players
+        # Initialize 2 players to play the game
+        self.players = [Player(i, self.np_random) for i in range(self.num_players)]
+
+        self.current_player_id = self.np_random.randint(0,2)
+
         self.payoffs = [0 for _ in range(self.num_players)]
+        self.dealer = Dealer(self.np_random)
+        self.board = Board()
+
+        self.is_over = False
+        self.winner = None
 
     def configure(self, game_config):
         ''' Specifiy some game specific parameters, such as number of players
@@ -28,32 +49,19 @@ class UnoGame:
                 (dict): The first state in one game
                 (int): Current player's id
         '''
-        # Initalize payoffs
-        self.payoffs = [0 for _ in range(self.num_players)]
+        # flip and check top 4 cards
+        flip_and_check_top_4_cards(self)
 
-        # Initialize a dealer that can deal cards
-        self.dealer = Dealer(self.np_random)
-
-        # Initialize four players to play the game
-        self.players = [Player(i, self.np_random) for i in range(self.num_players)]
-
-        # Deal 7 cards to each player to prepare for the game
+        # Deal 3 cards to each player to prepare for the game
         for player in self.players:
-            self.dealer.deal_cards(player, 7)
+            self.dealer.deal_cards(player, 3)
 
-        # Initialize a Round
-        self.round = Round(self.dealer, self.num_players, self.np_random)
-
-        # flip and perfrom top card
-        top_card = self.round.flip_top_card()
-        self.round.perform_top_card(self.players, top_card)
-
-        # Save the hisory for stepping back to the last state.
+        # Save the history for stepping back to the last state.
         self.history = []
 
-        player_id = self.round.current_player
-        state = self.get_state(player_id)
-        return state, player_id
+        state = self.get_state(self.current_player_id)
+        
+        return state, self.current_player_id
 
     def step(self, action):
         ''' Get the next state
@@ -100,10 +108,7 @@ class UnoGame:
         Returns:
             (dict): The state of the player
         '''
-        state = self.round.get_state(self.players, player_id)
-        state['num_players'] = self.get_num_players()
-        state['current_player'] = self.round.current_player
-        return state
+        pass
 
     def get_payoffs(self):
         ''' Return the payoffs of the game
@@ -158,3 +163,23 @@ class UnoGame:
             (boolean): True if the game is over
         '''
         return self.round.is_over
+
+
+# game= CirullaGame()
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+# game.init_game()
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+
+# init game with 15/30 sum of first 4 cards in deck 
+# game= CirullaGame()
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+# game.dealer.deck[:4]= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3")]
+# print([game.dealer.deck[i].__str__() for i in range(4)])
+# flip_and_check_top_4_cards(game)
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+# switch_player(game)
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
