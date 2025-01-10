@@ -1,6 +1,4 @@
 
-import rlcard
-
 # from rlcard.games.cirulla.card import CirullaCard as Card
 # from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
 # from rlcard.games.cirulla.player import CirullaPlayer as Player
@@ -31,7 +29,7 @@ def cards2list(cards):
     '''
     cards_list = []
     for card in cards:
-        cards_list.append(card.get_str())
+        cards_list.append(card.__str__())
     return cards_list
 
 def hand2dict(hand):
