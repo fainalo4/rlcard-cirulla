@@ -178,7 +178,7 @@ class CirullaGame:
             (int): The number of actions. 
             There are 40 actions, 1 for each card in the deck
         '''
-        return 3
+        return 40
 
     def is_over(self):
         ''' Check if the game is over
