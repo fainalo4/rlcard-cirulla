@@ -58,6 +58,13 @@ class Board:
                 if new_take.value <= 10:           # 10 is the maximum value of a card
                     new_takes.append(new_take)
         takes.extend(new_takes)
+
+        is_ace_one_board= any([c.value==1 for c in self.cards])
+        if not is_ace_one_board:
+            take_with_ace = Take(self.cards)
+            take_with_ace.value = 1
+            takes.append(take_with_ace)
+
         return takes
     
     def is_empty(self) -> bool:
