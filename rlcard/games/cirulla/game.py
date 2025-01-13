@@ -80,13 +80,21 @@ class CirullaGame:
         if self.allow_step_back:
             # First snapshot the current state
             his_dealer = deepcopy(self.dealer)
-            his_round = deepcopy(self.round)
+            his_round = deepcopy(self.round) # TODO: change in self ?
             his_players = deepcopy(self.players)
             self.history.append((his_dealer, his_players, his_round))
 
         self.round.proceed_round(self.players, action)
-        player_id = self.round.current_player
+
+        # current player plays card
+        # update stuff
+        # check if the game is over deck empty
+        # check if the round is over players hands empty
+        # switch player
+
+        player_id = self.current_player_id
         state = self.get_state(player_id)
+
         return state, player_id
 
     def step_back(self):
@@ -122,30 +130,34 @@ class CirullaGame:
         state['won_cards'] = cards2list(player.won_cards)
         state['other_won_cards'] = cards2list(other_player.won_cards)
 
-        state['legal_actions'] = self.get_legal_actions(player_id)
+        legal_actions= self.get_legal_actions(player_id)
+        state['legal_actions'] = cards2list(legal_actions)
 
         # TODO: check if needed this...
         state['num_cards'] = []
         for player in self.players:
             state['num_cards'].append(len(player.hand))
 
-        # TODO: maybe add both the scopa_sum to the state
+        # TODO: maybe add scopa_sum of all players to the state
 
         return state
 
-    def get_legal_actions(self, player_id: int) -> list[str]:
+    def get_legal_actions(self, player_id: int) -> list[Card]:
         ''' Return the legal actions for a player
 
         Returns:
             (list): A list of legal actions (as card strings)
         '''
-        # TODO: add the possibility to choose if "bussare" or not
-        # TODO: check if this function needs the current player or whatever player_id is passed
+        # TODO: change action with [hand,take] 
+
+        # optional TODO: 
+        # - add the possibility to choose if "bussare" or not
+        # - check if this function needs the current player or whatever player_id is passed
 
         hand = self.players[player_id].hand
 
-        return cards2list(hand)
-
+        return hand
+    
     def get_payoffs(self):
         ''' Return the payoffs of the game
 
@@ -166,7 +178,7 @@ class CirullaGame:
             (int): The number of actions. 
             There are 40 actions, 1 for each card in the deck
         '''
-        return 40
+        return 3
 
     def is_over(self):
         ''' Check if the game is over
@@ -184,13 +196,13 @@ class CirullaGame:
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
 # print(game.board.__str__())
 
-# init game with 15/30 sum of first 4 cards in deck 
+# # init game with 15/30 sum of first 4 cards in deck 
 # game= CirullaGame()
 # game.dealer.deck[:4]= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3")]
 # print(f"initial deck: {[game.dealer.deck[i].__str__() for i in range(4)]}")
 # game.init_game()
 # for id in [0,1]:
-#     assert game.get_legal_actions(id) == cards2list(game.players[id].hand)
+#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
 # print(game.players[game.current_player_id].__str__())
 # print(f"board: {game.board.__str__()}")
 # switch_player(game)
