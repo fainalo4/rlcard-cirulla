@@ -30,6 +30,7 @@ class CirullaJudger:
             (list): The player id of the winner
         '''
         # TODO: complicate game adding "cappotto" possibility
+        # TODO: save Plyer.points instead of only scopa_sum...
 
         count_0 = self.count_points(players[0])  
         count_1 = self.count_points(players[1])
@@ -73,7 +74,7 @@ class CirullaJudger:
             best_card: Card = self.calculate_best_primiera_card_of_suit(player.won_cards, suit)
             best_cards.append(best_card)
         # 2 sevens e 2 sixes
-        if any([c!=[] for c in best_cards]):  # if there is no card of at least one suit, no point
+        if all([c!=[] for c in best_cards]):  # if all suits are present in list
             if sum([PRIMIERA_VALUES[c.value] for c in best_cards]) >= 21 * 2 + 18 * 2:
                 s += 1
 
