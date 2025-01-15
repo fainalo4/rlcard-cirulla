@@ -20,7 +20,7 @@ PRIMIERA_VALUES = {
 
 class CirullaJudger:
 
-    def judge_winner(self, players: list[Player], np_random) -> list[Player] | Player:
+    def judge_winner(self, players: list[Player]) -> list[Player] | Player:
         ''' Judge the winner of the game
 
         Args:
@@ -29,7 +29,6 @@ class CirullaJudger:
         Returns:
             (list): The player id of the winner
         '''
-        self.np_random = np_random
         count_0 = self.count_points(players[0])  
         count_1 = self.count_points(players[1])
 
