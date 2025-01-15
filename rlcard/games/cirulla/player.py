@@ -7,13 +7,12 @@ from board import Take, Board
 
 class CirullaPlayer:
 
-    def __init__(self, player_id, np_random):
+    def __init__(self, player_id):
         ''' Initilize a player.
 
         Args:
             player_id (int): The id of the player
         '''
-        self.np_random = np_random
         self.player_id = player_id
         self.hand = []
         self.won_cards = []
@@ -94,9 +93,9 @@ class CirullaPlayer:
     
 
     def __str__(self):
-        return f"Player: {self.player_id}\n" +\
-               f"Hand: {[str(c) for c in self.hand]}\n" +\
-               f"Won cards: {[str(c) for c in self.won_cards]}\n" +\
+        return f"Player: {self.player_id} " +\
+               f"Hand: {[str(c) for c in self.hand]}  " +\
+               f"Won cards: {[str(c) for c in self.won_cards]}  " +\
                f"Scope: {self.scopa_sum}"
     
 # # OLD check buona
