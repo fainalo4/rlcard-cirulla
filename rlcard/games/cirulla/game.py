@@ -80,8 +80,12 @@ class CirullaGame:
 
         if self.allow_step_back:
             # First snapshot the current state
-            past_game_state = deepcopy(self)
-            self.history.append(past_game_state)
+            _players= deepcopy(self.players)
+            _current_player= deepcopy(self.current_player_id)
+            _board= deepcopy(self.board)
+            _dealer = deepcopy(self.dealer)
+            _judger= deepcopy(self.judger)
+            self.history.append((_players,_current_player,_board,_dealer,_judger))
 
         # current player plays card and update: hand, board, won_cards, scopa_sum
         self.players[self.current_player_id].play_card(raw_action, self.board)
@@ -104,7 +108,8 @@ class CirullaGame:
         '''
         if not self.history:
             return False
-        self = self.history.pop()
+        self.players, self.current_player_id, \
+        self.board, self.dealer, self.judger = self.history.pop()
         return True
 
     def get_state(self, player_id: int) -> dict:
@@ -281,32 +286,63 @@ class CirullaGame:
 # print("winner is " + game.winner.__str__())
 
 
-# step() and is_over() test = init game of complete deck and go on 
-game= CirullaGame()
-game.init_game()
-for id in [0,1]:
-    assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
-    print(game.players[id].__str__())
-print(f"board: {game.board.__str__()}")
-state= game.get_state(game.current_player_id)
-print('state 0')
-for keys,values in state.items():
-    if keys in ['hand','current_player','board']:
-        print(keys + f":{values}")
+# # step() and is_over() test = init game of complete deck and go on 
+# game= CirullaGame()
+# game.init_game()
+# for id in [0,1]:
+#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+#     print(game.players[id].__str__())
+# print(f"board: {game.board.__str__()}")
+# state= game.get_state(game.current_player_id)
+# print('state 0')
+# for keys,values in state.items():
+#     if keys in ['hand','current_player','board']:
+#         print(keys + f":{values}")
 
-c=0
-while game.is_over==False:
-    c+=1
-    possible_card= game.players[game.current_player_id].hand[0]
-    next_state, current_player= game.step(possible_card)
-    print(f'state {c}')
-    for keys,values in next_state.items():
-        if keys in ['hand','current_player','board']:
-            print(keys + f":  {values}")
-    game.is_game_or_round_over()
+# c=0
+# while game.is_over==False:
+#     c+=1
+#     possible_card= game.players[game.current_player_id].hand[0]
+#     next_state, current_player= game.step(possible_card)
+#     print(f'state {c}')
+#     for keys,values in next_state.items():
+#         if keys in ['hand','current_player','board']:
+#             print(keys + f":  {values}")
+#     game.is_game_or_round_over()
 
-if isinstance(game.winner, list):
-    print('draw!')
-else:
-    print("winner is " + game.winner.__str__())
-    print("loser  is " + game.players[1-game.winner.player_id].__str__())   
+# if isinstance(game.winner, list):
+#     print('draw!')
+# else:
+#     print("winner is " + game.winner.__str__())
+#     print("loser  is " + game.players[1-game.winner.player_id].__str__())
+
+
+# # step_back() test = init game of complete deck and go until a point anc come back 
+# game= CirullaGame(allow_step_back=True)
+# game.init_game()
+# for id in [0,1]:
+#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+#     print(game.players[id].__str__())
+# print(f"board: {game.board.__str__()}")
+# state= game.get_state(game.current_player_id)
+# print('state 0')
+# for keys,values in state.items():
+#     if keys in ['hand','current_player','board']:
+#         print(keys + f":{values}")
+
+# c=0
+# while c<3:
+#     c+=1
+#     possible_card= game.players[game.current_player_id].hand[0]
+#     next_state, current_player= game.step(possible_card)
+#     print(f'state {c}')
+#     for keys,values in next_state.items():
+#         print(keys + f":  {values}")
+#     game.is_game_or_round_over()
+
+# print(f'state {c-2}')
+# game.step_back()
+# game.step_back()
+# state= game.get_state(game.current_player_id)
+# for keys,values in state.items():
+#     print(keys + f":  {values}")
