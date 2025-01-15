@@ -29,6 +29,8 @@ class CirullaJudger:
         Returns:
             (list): The player id of the winner
         '''
+        # TODO: complicate game adding "cappotto" possibility
+
         count_0 = self.count_points(players[0])  
         count_1 = self.count_points(players[1])
 
@@ -42,7 +44,7 @@ class CirullaJudger:
     def calculate_best_primiera_card_of_suit(cards: list[Card], suit: str) -> Card:
         cards_of_suit = [c for c in cards if c.suit == suit]
         if len(cards_of_suit) == 0:
-            raise ValueError("There are no cards with that suit in the list")
+            return [] # there are no cards with that suit in the list
         return max(cards_of_suit, key=lambda c: PRIMIERA_VALUES[c.value])
 
     def count_points(self, player: Player) -> int:
@@ -71,8 +73,9 @@ class CirullaJudger:
             best_card: Card = self.calculate_best_primiera_card_of_suit(player.won_cards, suit)
             best_cards.append(best_card)
         # 2 sevens e 2 sixes
-        if sum([PRIMIERA_VALUES[c.value] for c in best_cards]) >= 21 * 2 + 18 * 2:
-            s += 1
+        if any([c!=[] for c in best_cards]):  # if there is no card of at least one suit, no point
+            if sum([PRIMIERA_VALUES[c.value] for c in best_cards]) >= 21 * 2 + 18 * 2:
+                s += 1
 
         # "Cards" 
         if len(player.won_cards) >= 21:
