@@ -26,7 +26,7 @@ class CirullaGame:
 
         self.num_players = num_players
         # Initialize 2 players to play the game
-        self.players = [Player(i, self.np_random) for i in range(self.num_players)]
+        self.players = [Player(i) for i in range(self.num_players)]
 
         self.current_player_id = self.np_random.randint(0,2)
 
@@ -36,6 +36,7 @@ class CirullaGame:
 
         self.is_over = False
         self.winner = None
+        self.judger = Judger()
 
     def configure(self, game_config):
         ''' Specifiy some game specific parameters, such as number of players
@@ -64,11 +65,11 @@ class CirullaGame:
         
         return state, self.current_player_id
 
-    def step(self, action):
+    def step(self, raw_action: Card):
         ''' Get the next state
 
         Args:
-            action (str): A specific action
+            action (Card): card to be played
 
         Returns:
             (tuple): Tuple containing:
@@ -79,18 +80,16 @@ class CirullaGame:
 
         if self.allow_step_back:
             # First snapshot the current state
-            his_dealer = deepcopy(self.dealer)
-            his_round = deepcopy(self.round) # TODO: change in self ?
-            his_players = deepcopy(self.players)
-            self.history.append((his_dealer, his_players, his_round))
+            past_game_state = deepcopy(self)
+            self.history.append(past_game_state)
 
-        self.round.proceed_round(self.players, action)
+        # current player plays card and update: hand, board, won_cards, scopa_sum
+        self.players[self.current_player_id].play_card(raw_action, self.board)
+        
+        # check if game or round is over 
+        self.is_game_or_round_over()
 
-        # current player plays card
-        # update stuff
-        # check if the game is over deck empty
-        # check if the round is over players hands empty
-        # switch player
+        switch_player(self)
 
         player_id = self.current_player_id
         state = self.get_state(player_id)
@@ -105,7 +104,7 @@ class CirullaGame:
         '''
         if not self.history:
             return False
-        self.dealer, self.players, self.round = self.history.pop()
+        self = self.history.pop()
         return True
 
     def get_state(self, player_id: int) -> dict:
@@ -148,7 +147,6 @@ class CirullaGame:
         Returns:
             (list): A list of legal actions (as card strings)
         '''
-        # TODO: change action with [hand,take] 
 
         # optional TODO: 
         # - add the possibility to choose if "bussare" or not
@@ -164,7 +162,7 @@ class CirullaGame:
         Returns:
             (list): Each entry corresponds to the payoff of one player
         '''
-        winner = self.winner
+        winner = self.winner # TODO: probably is self.winner.player_id...
         if winner is not None and len(winner) == 1:
             self.payoffs[winner[0]] = 1
             self.payoffs[1 - winner[0]] = -1
@@ -180,14 +178,27 @@ class CirullaGame:
         '''
         return 3
 
-    def is_over(self):
-        ''' Check if the game is over
+    def is_game_or_round_over(self):
+        ''' Check if the game is over (deck and hands empty)
+        or the round is over (hands empty)
 
         Returns:
-            (boolean): True if the game is over
+            []
         '''
-        return self.is_over
-
+        are_hands_empty= self.players[0].hand==[] and self.players[1].hand==[]
+        if self.dealer.is_deck_empty():
+            if are_hands_empty: # game finished
+                # TODO: complicate left cards: 
+                # if there are cards on the board, the player who took the last cards takes them
+                
+                self.players[self.current_player_id].won_cards.extend(self.board.cards)
+                self.is_over= True
+                self.winner= self.judger.judge_winner(self.players)
+        else:
+            if are_hands_empty:  # round finished
+                for p in range(self.num_players):
+                    self.dealer.deal_cards(self.players[p], 3)
+                
 
 # game= CirullaGame()
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
@@ -203,11 +214,99 @@ class CirullaGame:
 # game.init_game()
 # for id in [0,1]:
 #     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
-# print(game.players[game.current_player_id].__str__())
+#     print(game.players[id].__str__())
 # print(f"board: {game.board.__str__()}")
-# switch_player(game)
-# print(game.players[game.current_player_id].__str__())
 # state= game.get_state(game.current_player_id)
+# print('state 0')
 # for keys,values in state.items():
-#     print(keys)
-#     print(values)
+#     print(keys + f":  {values}")
+# game.is_game_or_round_over()
+
+# possible_card= game.players[game.current_player_id].hand[0]
+# next_state, current_player= game.step(possible_card)
+# print('state 1')
+# for keys,values in next_state.items():
+#     print(keys + f":  {values}")
+
+
+# # step() test = init game with 15/30 sum of first 4 cards in deck and go on 
+# game= CirullaGame()
+# game.dealer.deck= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3"), 
+#                    Card("C","A"), Card("D","7"), Card("C","4"),
+#                    Card("H","A"), Card("C","7"), Card("H","4")]
+# # print(f"initial deck: {[game.dealer.deck[i].__str__() for i in range(4)]}")
+# game.init_game()
+# for id in [0,1]:
+#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+#     print(game.players[id].__str__())
+# print(f"board: {game.board.__str__()}")
+# state= game.get_state(game.current_player_id)
+# print('state 0')
+# for keys,values in state.items():
+#     print(keys + f":  {values}")
+# game.is_game_or_round_over()
+
+# possible_card= game.players[game.current_player_id].hand[0]
+# next_state, current_player= game.step(possible_card)
+# print('state 1')
+# for keys,values in next_state.items():
+#     print(keys + f":  {values}")
+
+# # step() test = init game with 15/30 sum of first 4 cards in deck and go on 
+# game= CirullaGame()
+# game.dealer.deck= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3"), 
+#                    Card("C","A"), Card("D","7"), Card("C","4"),
+#                    Card("H","A"), Card("C","7"), Card("H","4")]
+# # print(f"initial deck: {[game.dealer.deck[i].__str__() for i in range(4)]}")
+# game.init_game()
+# for id in [0,1]:
+#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+#     print(game.players[id].__str__())
+# print(f"board: {game.board.__str__()}")
+# state= game.get_state(game.current_player_id)
+# print('state 0')
+# for keys,values in state.items():
+#     print(keys + f":{values}")
+
+# c=0
+# while game.is_over==False:
+#     c+=1
+#     possible_card= game.players[game.current_player_id].hand[0]
+#     next_state, current_player= game.step(possible_card)
+#     print(f'state {c}')
+#     for keys,values in next_state.items():
+#         print(keys + f":  {values}")
+#     game.is_game_or_round_over()
+
+# print("winner is " + game.winner.__str__())
+
+
+# step() and is_over() test = init game of complete deck and go on 
+game= CirullaGame()
+game.init_game()
+for id in [0,1]:
+    assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+    print(game.players[id].__str__())
+print(f"board: {game.board.__str__()}")
+state= game.get_state(game.current_player_id)
+print('state 0')
+for keys,values in state.items():
+    if keys in ['hand','current_player','board']:
+        print(keys + f":{values}")
+
+c=0
+while game.is_over==False:
+    c+=1
+    possible_card= game.players[game.current_player_id].hand[0]
+    next_state, current_player= game.step(possible_card)
+    print(f'state {c}')
+    for keys,values in next_state.items():
+        if keys in ['hand','current_player','board']:
+            print(keys + f":  {values}")
+    game.is_game_or_round_over()
+
+if isinstance(game.winner, list):
+    print('draw!')
+else:
+    print("winner is " + game.winner.__str__())
+    print("loser  is " + game.players[1-game.winner.player_id].__str__())   
