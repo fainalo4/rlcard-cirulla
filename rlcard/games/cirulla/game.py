@@ -25,9 +25,7 @@ class CirullaGame:
         self.np_random = np.random.RandomState()
 
         self.num_players = num_players
-        # Initialize 2 players to play the game
         self.players = [Player(i) for i in range(self.num_players)]
-
         self.current_player_id = self.np_random.randint(0,2)
 
         self.payoffs = [0 for _ in range(self.num_players)]
