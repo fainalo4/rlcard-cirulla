@@ -2,19 +2,20 @@ import numpy as np
 from collections import OrderedDict
 
 from rlcard.envs import Env
-from rlcard.games.uno import Game
-from rlcard.games.uno.utils import encode_hand, encode_target
-from rlcard.games.uno.utils import ACTION_SPACE, ACTION_LIST
-from rlcard.games.uno.utils import cards2list
+from rlcard.games.cirulla.game import Game
+
+from rlcard.games.cirulla.utils import encode_hand, encode_target
+from rlcard.games.cirulla.utils import ACTION_SPACE, ACTION_LIST
+from rlcard.games.cirulla.utils import cards2list
 
 DEFAULT_GAME_CONFIG = {
         'game_num_players': 2,
         }
 
-class UnoEnv(Env):
+class CirullaEnv(Env):
 
     def __init__(self, config):
-        self.name = 'uno'
+        self.name = 'cirulla'
         self.default_game_config = DEFAULT_GAME_CONFIG
         self.game = Game()
         super().__init__(config)
