@@ -180,6 +180,10 @@ class CirullaGame:
             There are 40 actions, 1 for each card in the deck
         '''
         return 3
+    
+    def get_num_players(self):
+        return self.num_players
+
 
     def is_game_or_round_over(self):
         ''' Check if the game is over (deck and hands empty)
