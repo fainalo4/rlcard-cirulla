@@ -2,7 +2,7 @@ import numpy as np
 from collections import OrderedDict
 
 from rlcard.envs import Env
-from rlcard.games.cirulla.game import Game
+from rlcard.games.cirulla.game import CirullaGame as Game
 
 from rlcard.games.cirulla.utils import encode_hand, encode_target
 from rlcard.games.cirulla.utils import ACTION_SPACE, ACTION_LIST
