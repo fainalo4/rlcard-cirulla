@@ -11,7 +11,7 @@ class EnvSpec(object):
     '''
 
     def __init__(self, env_id, entry_point=None):
-        ''' Initilize
+        ''' Initialize
 
         Args:
             env_id (string): The name of the environent
