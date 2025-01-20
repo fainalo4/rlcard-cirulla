@@ -113,19 +113,3 @@ def encode_hand(plane, hand):
             plane[0][color][trait] = 0
             plane[count][color][trait] = 1
     return plane
-
-def encode_target(plane, target):
-    ''' Encode target and represerve it into plane
-
-    Args:
-        plane (array): 1*4*15 numpy array
-        target(str): string of target card
-
-    Returns:
-        (array): 1*4*15 numpy array
-    '''
-    target_info = target.split('-')
-    color = COLOR_MAP[target_info[0]]
-    trait = TRAIT_MAP[target_info[1]]
-    plane[color][trait] = 1
-    return plane
