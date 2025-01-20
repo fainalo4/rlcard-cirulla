@@ -48,7 +48,7 @@ register(
     entry_point='rlcard.envs.bridge:BridgeEnv',
 )
 
-register(
-    env_id='cirulla',
-    entry_point='rlcard.envs.cirulla:CirullaEnv',
-)
+# register(
+#     env_id='cirulla',
+#     entry_point='rlcard.envs.cirulla:CirullaEnv',
+# )
