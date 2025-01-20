@@ -9,12 +9,14 @@ from rlcard.games.cirulla.game import CirullaGame as Game
 from rlcard.games.cirulla.utils import cards2list
 
 DEFAULT_GAME_CONFIG = {
-        'game_num_players': 2,
+        'num_players': 2,
+        'allow_step_back': True,
+        'seed': 4
         }
 
 class CirullaEnv(Env):
 
-    def __init__(self, config):
+    def __init__(self, config = DEFAULT_GAME_CONFIG):
         self.name = 'cirulla'
         self.default_game_config = DEFAULT_GAME_CONFIG
         self.game = Game()
@@ -39,7 +41,7 @@ class CirullaEnv(Env):
             return cards_in_hand[np.random.choice(legal_ids)]
 
     def _get_legal_actions(self):
-        legal_actions = self.game.get_legal_actions()
+        legal_actions = self.game.get_legal_actions(self.game.current_player_id)
         number_of_cards_in_hand= len(legal_actions)
         legal_ids = list(range(number_of_cards_in_hand))
         return legal_ids
@@ -60,3 +62,18 @@ class CirullaEnv(Env):
         state['legal_actions'] = self.game.round.get_legal_actions(
             self.game.players, state['current_player'])
         return state
+
+# # test for action functions
+# env= CirullaEnv()
+# env.game.init_game()
+# legal_actions= env._get_legal_actions()
+# print('action ids:')
+# print(legal_actions)
+# which_card= 1
+# print(f'action # {which_card}')
+# decoded_legal_action= env._decode_action(which_card)
+# print(decoded_legal_action.__str__())
+# print('check')
+# print(f'current player {env.game.current_player_id}')
+# print(env.game.players[0].__str__())
+# print(env.game.players[1].__str__())
