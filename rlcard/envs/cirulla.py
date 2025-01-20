@@ -4,8 +4,8 @@ from collections import OrderedDict
 from rlcard.envs import Env
 from rlcard.games.cirulla.game import CirullaGame as Game
 
-from rlcard.games.cirulla.utils import encode_hand, encode_target
-from rlcard.games.cirulla.utils import ACTION_SPACE, ACTION_LIST
+# from rlcard.games.cirulla.utils import encode_hand
+# from rlcard.games.cirulla.utils import ACTION_SPACE, ACTION_LIST
 from rlcard.games.cirulla.utils import cards2list
 
 DEFAULT_GAME_CONFIG = {
@@ -20,18 +20,10 @@ class CirullaEnv(Env):
         self.game = Game()
         super().__init__(config)
         self.state_shape = [[4, 4, 15] for _ in range(self.num_players)]
-        self.action_shape = [None for _ in range(self.num_players)]
+        self.action_shape = [[3] for _ in range(self.num_players)]
 
     def _extract_state(self, state): 
-        obs = np.zeros((4, 4, 15), dtype=int)
-        encode_hand(obs[:3], state['hand'])
-        encode_target(obs[3], state['target'])
-        legal_action_id = self._get_legal_actions()
-        extracted_state = {'obs': obs, 'legal_actions': legal_action_id}
-        extracted_state['raw_obs'] = state
-        extracted_state['raw_legal_actions'] = [a for a in state['legal_actions']]
-        extracted_state['action_record'] = self.action_recorder
-        return extracted_state
+        pass
 
     def get_payoffs(self):
 
@@ -39,16 +31,18 @@ class CirullaEnv(Env):
 
     def _decode_action(self, action_id):
         legal_ids = self._get_legal_actions()
+        current_player= self.game.players[self.game.current_player_id]
+        cards_in_hand= current_player.hand
         if action_id in legal_ids:
-            return ACTION_LIST[action_id]
-        # if (len(self.game.dealer.deck) + len(self.game.round.played_cards)) > 17:
-        #    return ACTION_LIST[60]
-        return ACTION_LIST[np.random.choice(legal_ids)]
+            return cards_in_hand[action_id]
+        else:
+            return cards_in_hand[np.random.choice(legal_ids)]
 
     def _get_legal_actions(self):
         legal_actions = self.game.get_legal_actions()
-        legal_ids = {ACTION_SPACE[action]: None for action in legal_actions}
-        return OrderedDict(legal_ids)
+        number_of_cards_in_hand= len(legal_actions)
+        legal_ids = list(range(number_of_cards_in_hand))
+        return legal_ids
 
     def get_perfect_information(self):
         ''' Get the perfect information of the current state
