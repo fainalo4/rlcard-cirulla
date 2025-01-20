@@ -1,19 +1,19 @@
 from copy import deepcopy
 import numpy as np
 
-# from rlcard.games.cirulla.card import CirullaCard as Card
-# from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
-# from rlcard.games.cirulla.player import CirullaPlayer as Player
-# from rlcard.games.cirulla.board import Board, Take
-# from rlcard.games.cirulla.judger import CirullaJudger as Judger
-# from rlcard.games.cirulla.utils import flip_top_4_cards 
+from rlcard.games.cirulla.card import CirullaCard as Card
+from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
+from rlcard.games.cirulla.player import CirullaPlayer as Player
+from rlcard.games.cirulla.board import Board, Take
+from rlcard.games.cirulla.judger import CirullaJudger as Judger
+from rlcard.games.cirulla.utils import *
 
-from card import CirullaCard as Card
-from dealer import CirullaDealer as Dealer
-from player import CirullaPlayer as Player
-from board import Board, Take
-from judger import CirullaJudger as Judger
-from utils import *
+# from card import CirullaCard as Card
+# from dealer import CirullaDealer as Dealer
+# from player import CirullaPlayer as Player
+# from board import Board, Take
+# from judger import CirullaJudger as Judger
+# from utils import *
 
  
 

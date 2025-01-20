@@ -1,6 +1,6 @@
 
-# from rlcard.games.cirulla.card import CirullaCard as Card
-from card import CirullaCard as Card
+from rlcard.games.cirulla.card import CirullaCard as Card
+# from card import CirullaCard as Card
 
 # from rlcard.games.cirulla.board import Take, Board
 from board import Take, Board

@@ -1,7 +1,5 @@
 
-# from rlcard.games.cirulla.utils import init_deck
-from utils import init_deck
-
+from rlcard.games.cirulla.utils import init_deck
 
 class CirullaDealer:
     ''' Initialize a Cirulla dealer class

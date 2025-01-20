@@ -1,9 +1,9 @@
 
-# from rlcard.games.cirulla.card import CirullaCard as Card
-from card import CirullaCard as Card
+from rlcard.games.cirulla.card import CirullaCard as Card
+# from card import CirullaCard as Card
 
-# from rlcard.games.cirulla.palyer import CirullaPlayer as Player
-from player import CirullaPlayer as Player
+from rlcard.games.cirulla.player import CirullaPlayer as Player
+# from player import CirullaPlayer as Player
 
 PRIMIERA_VALUES = {
     7: 21,
