@@ -1,8 +1,5 @@
 
 from rlcard.games.cirulla.card import CirullaCard as Card
-# from rlcard.games.cirulla.dealer import CirullaDealer as Dealer
-# from rlcard.games.cirulla.player import CirullaPlayer as Player
-# from rlcard.games.cirulla.game import CirullaGame as Game
 
 def init_deck():
     ''' Initialize a Cirulla deck of 40 cards
