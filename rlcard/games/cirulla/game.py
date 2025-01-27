@@ -165,10 +165,14 @@ class CirullaGame:
         Returns:
             (list): Each entry corresponds to the payoff of one player
         '''
-        winner = self.winner # TODO: probably is self.winner.player_id...
-        if winner is not None and len(winner) == 1:
-            self.payoffs[winner[0]] = 1
-            self.payoffs[1 - winner[0]] = -1
+        try:
+            winner = self.winner.player_id 
+        except:
+            pass # game is finished in draw
+        else:
+            if winner is not None:
+                self.payoffs[winner] = 1
+                self.payoffs[1 - winner] = -1
         return self.payoffs
     
     @staticmethod
@@ -259,7 +263,7 @@ class CirullaGame:
 # for keys,values in next_state.items():
 #     print(keys + f":  {values}")
 
-# # step() test = init game with 15/30 sum of first 4 cards in deck and go on 
+# step() test = init game with 15/30 sum of first 4 cards in deck and go on 
 # game= CirullaGame()
 # game.dealer.deck= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3"), 
 #                    Card("C","A"), Card("D","7"), Card("C","4"),
@@ -317,7 +321,8 @@ class CirullaGame:
 # else:
 #     print("winner is " + game.winner.__str__())
 #     print("loser  is " + game.players[1-game.winner.player_id].__str__())
-
+# print("payoffs")
+# print(game.get_payoffs())
 
 # # step_back() test = init game of complete deck and go until a point anc come back 
 # game= CirullaGame(allow_step_back=True)
