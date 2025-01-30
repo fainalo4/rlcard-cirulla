@@ -4,9 +4,7 @@ from collections import OrderedDict
 from rlcard.envs import Env
 from rlcard.games.cirulla.game import CirullaGame as Game
 
-# from rlcard.games.cirulla.utils import encode_hand
-# from rlcard.games.cirulla.utils import ACTION_SPACE, ACTION_LIST
-from rlcard.games.cirulla.utils import cards2list
+from rlcard.games.cirulla.utils import cards2list, encode_cards
 
 DEFAULT_GAME_CONFIG = {
         'num_players': 2,
@@ -21,14 +19,10 @@ class CirullaEnv(Env):
         self.default_game_config = DEFAULT_GAME_CONFIG
         self.game = Game()
         super().__init__(config)
-        self.state_shape = [[4, 4, 15] for _ in range(self.num_players)]
+        self.state_shape = [[5,40] for _ in range(self.num_players)]
         self.action_shape = [[3] for _ in range(self.num_players)]
 
-    def _extract_state(self, state): 
-        pass
-
     def get_payoffs(self):
-
         return np.array(self.game.get_payoffs())
 
     def _decode_action(self, action_id):
@@ -46,22 +40,40 @@ class CirullaEnv(Env):
         legal_ids = list(range(number_of_cards_in_hand))
         return legal_ids
 
-    def get_perfect_information(self):
-        ''' Get the perfect information of the current state
+    def _extract_state(self, state):
+        ''' Encode state
+
+        Args:
+            state (dict): dict of original state
 
         Returns:
-            (dict): A dictionary of all the perfect information of the current state
+            numpy array: 5 * 40 array
+                         5 :board state         (1 if card in board else 0) 
+                            my hand             (1 if card in hand else 0)
+                            oppents hand        (1 if card in hand else 0)
+                            my won cards        (1 if card in won cards else 0)
+                            opponents won cards (1 if card in won cards else 0)
+        TODO: add also points for each player as integers
         '''
-        state = {}
-        state['num_players'] = self.num_players
-        state['hand_cards'] = [cards2list(player.hand)
-                               for player in self.game.players]
-        state['played_cards'] = cards2list(self.game.round.played_cards)
-        state['target'] = self.game.round.target.str
-        state['current_player'] = self.game.round.current_player
-        state['legal_actions'] = self.game.round.get_legal_actions(
-            self.game.players, state['current_player'])
-        return state
+   
+        board_rep= encode_cards(state['board'])
+        my_hand_rep= encode_cards(state['my_hand'])
+        opponents_hand_rep= encode_cards(state['opponents_hand'])
+        my_won_cards_rep= encode_cards(state['my_won_cards'])
+        opponents_won_cards_rep= encode_cards(state['opponents_won_cards'])
+
+        extracted_state= {}
+        extracted_state['obs']= np.array([board_rep,
+                                          my_hand_rep, 
+                                          opponents_hand_rep, 
+                                          my_won_cards_rep, 
+                                          opponents_won_cards_rep])
+        extracted_state['raw_obs']= state
+        extracted_state['legal_actions']= self._get_legal_actions() 
+        extracted_state['raw_legal_actions']= state['legal_actions']
+
+        return extracted_state
+
 
 # # test for action functions
 # env= CirullaEnv()
@@ -77,3 +89,29 @@ class CirullaEnv(Env):
 # print(f'current player {env.game.current_player_id}')
 # print(env.game.players[0].__str__())
 # print(env.game.players[1].__str__())
+
+
+# # test for _extract_state function
+# env= CirullaEnv()
+# env.game.init_game()
+# player= env.game.current_player_id
+# extr_state= env._extract_state(env.game.get_state(player))
+# print('extracted state:')
+# for keys,values in extr_state.items():
+#     print(keys + f":  {values}")
+# env.step(0)
+# player= env.game.current_player_id
+# extr_state= env._extract_state(env.game.get_state(player))
+# print('extracted state:')
+# for keys,values in extr_state.items():
+#     print(keys + f":  {values}")
+# env.step(0)
+# player= env.game.current_player_id
+# extr_state= env._extract_state(env.game.get_state(player))
+# print('extracted state:')
+# for keys,values in extr_state.items():
+#     print(keys + f":  {values}")
+
+# # # test run() in Env class
+# env= CirullaEnv()
+# env.run()
