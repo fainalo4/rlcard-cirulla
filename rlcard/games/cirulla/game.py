@@ -122,15 +122,15 @@ class CirullaGame:
 
         state = {}
         player = self.players[player_id]
-        other_player = self.players[1 - player_id]
+        opponent_player = self.players[1 - player_id]
         
         state['num_players'] = self.num_players
         state['current_player'] = player_id
         state['my_hand'] = player.hand
-        state['other_hand'] = other_player.hand
+        state['opponents_hand'] = opponent_player.hand
         state['board'] = self.board.cards
         state['my_won_cards'] = player.won_cards
-        state['other_won_cards'] = other_player.won_cards
+        state['opponents_won_cards'] = opponent_player.won_cards
 
         legal_actions= self.get_legal_actions(player_id)
         state['legal_actions'] = legal_actions
