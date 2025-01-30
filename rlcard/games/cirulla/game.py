@@ -209,7 +209,9 @@ class CirullaGame:
             if are_hands_empty:  # round finished
                 for p in range(self.num_players):
                     self.dealer.deal_cards(self.players[p], 3)
-                
+
+    def get_player_id(self):
+        return self.current_player_id   
 
 # game= CirullaGame()
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
