@@ -32,7 +32,7 @@ class CirullaGame:
         self.dealer = Dealer(self.np_random)
         self.board = Board()
 
-        self.is_over = False
+        self._is_over = False
         self.winner = None
         self.judger = Judger()
 
@@ -188,7 +188,6 @@ class CirullaGame:
     def get_num_players(self):
         return self.num_players
 
-
     def is_game_or_round_over(self):
         ''' Check if the game is over (deck and hands empty)
         or the round is over (hands empty)
@@ -203,7 +202,7 @@ class CirullaGame:
                 # if there are cards on the board, the player who took the last cards takes them
                 
                 self.players[self.current_player_id].won_cards.extend(self.board.cards)
-                self.is_over= True
+                self._is_over= True
                 self.winner= self.judger.judge_winner(self.players)
         else:
             if are_hands_empty:  # round finished
@@ -214,7 +213,7 @@ class CirullaGame:
         return self.current_player_id   
     
     def is_over(self):
-        return self.is_over
+        return self._is_over
 
 # game= CirullaGame()
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
