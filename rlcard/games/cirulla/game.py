@@ -126,10 +126,10 @@ class CirullaGame:
         
         state['num_players'] = self.num_players
         state['current_player'] = player_id
-        state['hand'] = cards2list(player.hand)
+        state['my_hand'] = cards2list(player.hand)
         state['other_hand'] = cards2list(other_player.hand)
         state['board'] = cards2list(self.board.cards)
-        state['won_cards'] = cards2list(player.won_cards)
+        state['my_won_cards'] = cards2list(player.won_cards)
         state['other_won_cards'] = cards2list(other_player.won_cards)
 
         legal_actions= self.get_legal_actions(player_id)
@@ -302,7 +302,7 @@ class CirullaGame:
 # state= game.get_state(game.current_player_id)
 # print('state 0')
 # for keys,values in state.items():
-#     if keys in ['hand','current_player','board']:
+#     if keys in ['my_hand','current_player','board']:
 #         print(keys + f":{values}")
 
 # c=0
@@ -312,7 +312,7 @@ class CirullaGame:
 #     next_state, current_player= game.step(possible_card)
 #     print(f'state {c}')
 #     for keys,values in next_state.items():
-#         if keys in ['hand','current_player','board']:
+#         if keys in ['my_hand','current_player','board']:
 #             print(keys + f":  {values}")
 #     game.is_game_or_round_over()
 
@@ -334,7 +334,7 @@ class CirullaGame:
 # state= game.get_state(game.current_player_id)
 # print('state 0')
 # for keys,values in state.items():
-#     if keys in ['hand','current_player','board']:
+#     if keys in ['my_hand','current_player','board']:
 #         print(keys + f":{values}")
 
 # c=0
