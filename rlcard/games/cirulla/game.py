@@ -212,6 +212,9 @@ class CirullaGame:
 
     def get_player_id(self):
         return self.current_player_id   
+    
+    def is_over(self):
+        return self.is_over
 
 # game= CirullaGame()
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
