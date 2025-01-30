@@ -1,5 +1,6 @@
 
 from rlcard.games.cirulla.card import CirullaCard as Card
+import numpy as np
 
 def init_deck():
     ''' Initialize a Cirulla deck of 40 cards
@@ -87,29 +88,29 @@ def switch_player(game):
         game.current_player_id = 1
 
 
-def encode_hand(plane, hand):
-    ''' Encode hand and represerve it into plane
-
-    Args:
-        plane (array): 3*4*15 numpy array
-        hand (list): list of string of hand's card
-
-    Returns:
-        (array): 3*4*15 numpy array
-    '''
-    # plane = np.zeros((3, 4, 15), dtype=int)
-    plane[0] = np.ones((4, 15), dtype=int)
-    hand = hand2dict(hand)
-    for card, count in hand.items():
-        card_info = card.split('-')
-        color = COLOR_MAP[card_info[0]]
-        trait = TRAIT_MAP[card_info[1]]
-        if trait >= 13:
-            if plane[1][0][trait] == 0:
-                for index in range(4):
-                    plane[0][index][trait] = 0
-                    plane[1][index][trait] = 1
-        else:
-            plane[0][color][trait] = 0
-            plane[count][color][trait] = 1
+# functions below are copied from gin_rummy implementation (a big thanks to the authors)
+def encode_cards(cards: list[Card]) -> np.ndarray:
+    plane = np.zeros(40, dtype=int)
+    for card in cards:
+        card_id = get_card_id(card)
+        plane[card_id] = 1
     return plane
+
+def get_card_id(card: Card) -> int:
+    rank_id = get_rank_id(card)
+    suit_id = get_suit_id(card)
+    return rank_id + 10 * suit_id
+
+
+def get_rank_id(card: Card) -> int:
+    return Card.valid_rank.index(card.rank)
+
+
+def get_suit_id(card: Card) -> int:
+    return Card.valid_suit.index(card.suit)
+
+
+# # test card encoding into a plane of 40
+# cards= [Card('S', 'A'), Card('H', '2'), Card('D', '3'), Card('C', 'K')]
+# plane= encode_cards(cards)
+# print(plane)

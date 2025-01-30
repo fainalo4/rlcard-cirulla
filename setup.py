@@ -40,7 +40,7 @@ setuptools.setup(
     install_requires=[
         'numpy>=1.16.3',
         'termcolor'
-    ],
+    ], # TODO: add more-itertools for cirulla?
     extras_require=extras,
     requires_python='>=3.7',
     classifiers=[
