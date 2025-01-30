@@ -126,14 +126,14 @@ class CirullaGame:
         
         state['num_players'] = self.num_players
         state['current_player'] = player_id
-        state['my_hand'] = cards2list(player.hand)
-        state['other_hand'] = cards2list(other_player.hand)
-        state['board'] = cards2list(self.board.cards)
-        state['my_won_cards'] = cards2list(player.won_cards)
-        state['other_won_cards'] = cards2list(other_player.won_cards)
+        state['my_hand'] = player.hand
+        state['other_hand'] = other_player.hand
+        state['board'] = self.board.cards
+        state['my_won_cards'] = player.won_cards
+        state['other_won_cards'] = other_player.won_cards
 
         legal_actions= self.get_legal_actions(player_id)
-        state['legal_actions'] = cards2list(legal_actions)
+        state['legal_actions'] = legal_actions
 
         # TODO: check if needed this...
         state['num_cards'] = []
@@ -263,7 +263,7 @@ class CirullaGame:
 # for keys,values in next_state.items():
 #     print(keys + f":  {values}")
 
-# step() test = init game with 15/30 sum of first 4 cards in deck and go on 
+# # step() test = init game with 15/30 sum of first 4 cards in deck and go on 
 # game= CirullaGame()
 # game.dealer.deck= [Card("D","A"), Card("H","7"), Card("S","4"), Card("C","3"), 
 #                    Card("C","A"), Card("D","7"), Card("C","4"),
@@ -292,37 +292,39 @@ class CirullaGame:
 # print("winner is " + game.winner.__str__())
 
 
-# # step() and is_over() test = init game of complete deck and go on 
-# game= CirullaGame()
-# game.init_game()
-# for id in [0,1]:
-#     assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
-#     print(game.players[id].__str__())
-# print(f"board: {game.board.__str__()}")
-# state= game.get_state(game.current_player_id)
-# print('state 0')
-# for keys,values in state.items():
-#     if keys in ['my_hand','current_player','board']:
-#         print(keys + f":{values}")
+# step() and is_over() test = init game of complete deck and go on 
+game= CirullaGame()
+game.init_game()
+for id in [0,1]:
+    assert cards2list(game.get_legal_actions(id)) == cards2list(game.players[id].hand)
+    print(game.players[id].__str__())
+print(f"board: {game.board.__str__()}")
+state= game.get_state(game.current_player_id)
+print('state 0')
+for keys,values in state.items():
+    if keys in ['my_hand','board']:
+        print(keys + f":{cards2list(values)}")
+print('current_player' + f": {state['current_player']}")
 
-# c=0
-# while game.is_over==False:
-#     c+=1
-#     possible_card= game.players[game.current_player_id].hand[0]
-#     next_state, current_player= game.step(possible_card)
-#     print(f'state {c}')
-#     for keys,values in next_state.items():
-#         if keys in ['my_hand','current_player','board']:
-#             print(keys + f":  {values}")
-#     game.is_game_or_round_over()
+c=0
+while game.is_over==False:
+    c+=1
+    possible_card= game.players[game.current_player_id].hand[0]
+    next_state, current_player= game.step(possible_card)
+    print(f'state {c}')
+    for keys,values in next_state.items():
+        if keys in ['my_hand','board']:
+            print(keys + f":  {cards2list(values)}")
+    print('current_player' + f": {state['current_player']}")
+    game.is_game_or_round_over()
 
-# if isinstance(game.winner, list):
-#     print('draw!')
-# else:
-#     print("winner is " + game.winner.__str__())
-#     print("loser  is " + game.players[1-game.winner.player_id].__str__())
-# print("payoffs")
-# print(game.get_payoffs())
+if isinstance(game.winner, list):
+    print('draw!')
+else:
+    print("winner is " + game.winner.__str__())
+    print("loser  is " + game.players[1-game.winner.player_id].__str__())
+print("payoffs")
+print(game.get_payoffs())
 
 # # step_back() test = init game of complete deck and go until a point anc come back 
 # game= CirullaGame(allow_step_back=True)

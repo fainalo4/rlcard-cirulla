@@ -18,7 +18,7 @@ def cards2list(cards):
     ''' Get the corresponding string representation of cards
 
     Args:
-        cards (list): list of UnoCards objects
+        cards (list): list of CirullaCard objects
 
     Returns:
         (string): string representation of cards
