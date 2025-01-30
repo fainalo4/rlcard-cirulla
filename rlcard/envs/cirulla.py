@@ -99,19 +99,17 @@ class CirullaEnv(Env):
 # print('extracted state:')
 # for keys,values in extr_state.items():
 #     print(keys + f":  {values}")
-# env.step(0)
-# player= env.game.current_player_id
-# extr_state= env._extract_state(env.game.get_state(player))
-# print('extracted state:')
-# for keys,values in extr_state.items():
-#     print(keys + f":  {values}")
-# env.step(0)
-# player= env.game.current_player_id
-# extr_state= env._extract_state(env.game.get_state(player))
-# print('extracted state:')
-# for keys,values in extr_state.items():
-#     print(keys + f":  {values}")
 
-# # # test run() in Env class
-# env= CirullaEnv()
-# env.run()
+# # test step() in Env class
+# env.step(0)
+# player= env.game.current_player_id
+# extr_state= env._extract_state(env.game.get_state(player))
+# print('extracted state:')
+# for keys,values in extr_state.items():
+#     print(keys + f":  {values}")
+# env.step(0)
+# player= env.game.current_player_id
+# extr_state= env._extract_state(env.game.get_state(player))
+# print('extracted state:')
+# for keys,values in extr_state.items():
+#     print(keys + f":  {values}")
