@@ -28,6 +28,7 @@ def cards2list(cards):
         cards_list.append(card.__str__())
     return cards_list
 
+
 def hand2dict(hand):
     ''' Get the corresponding dict representation of hand
 
@@ -76,6 +77,7 @@ def flip_and_check_top_4_cards(game):
         game.board.cards = top
     switch_player(game)
 
+
 def switch_player(game):
     ''' Switch to the next player
 
@@ -109,6 +111,19 @@ def get_rank_id(card: Card) -> int:
 def get_suit_id(card: Card) -> int:
     return Card.valid_suit.index(card.suit)
 
+def card_from_card_id(card_id: int) -> Card:
+    ''' Make card from its card_id
+
+    Args:
+        card_id: int in range(0, 52)
+     '''
+    if not (0 <= card_id < 40):
+        raise Exception("card_id is {}: should be 0 <= card_id < 40.".format(card_id))
+    rank_id = card_id % 10
+    suit_id = card_id // 10
+    rank = Card.valid_rank[rank_id]
+    suit = Card.valid_suit[suit_id]
+    return Card(rank=rank, suit=suit)
 
 # # test card encoding into a plane of 40
 # cards= [Card('S', 'A'), Card('H', '2'), Card('D', '3'), Card('C', 'K')]

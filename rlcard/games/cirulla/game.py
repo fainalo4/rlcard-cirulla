@@ -148,7 +148,7 @@ class CirullaGame:
         ''' Return the legal actions for a player
 
         Returns:
-            (list): A list of legal actions (as card strings)
+            (list): A list of legal actions (as card object)
         '''
 
         # optional TODO: 
@@ -183,7 +183,7 @@ class CirullaGame:
             (int): The number of actions. 
             There are 40 actions, 1 for each card in the deck
         '''
-        return 3
+        return 40
     
     def get_num_players(self):
         return self.num_players
