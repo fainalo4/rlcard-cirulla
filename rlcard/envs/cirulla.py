@@ -3,8 +3,9 @@ from collections import OrderedDict
 
 from rlcard.envs import Env
 from rlcard.games.cirulla.game import CirullaGame as Game
+from rlcard.games.cirulla.card import CirullaCard as Card
 
-from rlcard.games.cirulla.utils import cards2list, encode_cards
+from rlcard.games.cirulla.utils import encode_cards, get_card_id, card_from_card_id
 
 DEFAULT_GAME_CONFIG = {
         'num_players': 2,
@@ -22,25 +23,26 @@ class CirullaEnv(Env):
         self.state_shape = [[5,40] for _ in range(self.num_players)]
         self.action_shape = [[3] for _ in range(self.num_players)]
 
-    def get_payoffs(self):
+
+    def get_payoffs(self) -> np.array:
         return np.array(self.game.get_payoffs())
 
-    def _decode_action(self, action_id):
+
+    def _decode_action(self, action_id: int) -> Card:
         legal_ids = self._get_legal_actions()
-        current_player= self.game.players[self.game.current_player_id]
-        cards_in_hand= current_player.hand
-        if action_id in legal_ids:
-            return cards_in_hand[action_id]
+        if action_id in legal_ids.keys():
+            return card_from_card_id(action_id)
         else:
-            return cards_in_hand[np.random.choice(legal_ids)]
+            return card_from_card_id(np.random.choice(list(legal_ids.keys())))
 
-    def _get_legal_actions(self):
+
+    def _get_legal_actions(self) -> dict:
         legal_actions = self.game.get_legal_actions(self.game.current_player_id)
-        number_of_cards_in_hand= len(legal_actions)
-        legal_ids = list(range(number_of_cards_in_hand))
-        return legal_ids
+        legal_ids = {get_card_id(card): card for card in legal_actions}
+        return OrderedDict(legal_ids)
 
-    def _extract_state(self, state):
+
+    def _extract_state(self, state) -> dict:
         ''' Encode state
 
         Args:
@@ -80,8 +82,9 @@ class CirullaEnv(Env):
 # env.game.init_game()
 # legal_actions= env._get_legal_actions()
 # print('action ids:')
-# print(legal_actions)
-# which_card= 1
+# for a in legal_actions.keys():
+#     print(a , f' : {legal_actions[a].__str__()}')
+# which_card= 0
 # print(f'action # {which_card}')
 # decoded_legal_action= env._decode_action(which_card)
 # print(decoded_legal_action.__str__())
