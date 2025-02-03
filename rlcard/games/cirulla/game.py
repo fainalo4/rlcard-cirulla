@@ -202,6 +202,7 @@ class CirullaGame:
                 # if there are cards on the board, the player who took the last cards takes them
                 
                 self.players[self.current_player_id].won_cards.extend(self.board.cards)
+                self.board.cards= []
                 self._is_over= True
                 self.winner= self.judger.judge_winner(self.players)
         else:
@@ -296,7 +297,7 @@ class CirullaGame:
 # print("winner is " + game.winner.__str__())
 
 
-# step() and is_over() test = init game of complete deck and go on 
+# # step() and is_over() test = init game of complete deck and go on 
 # game= CirullaGame()
 # game.init_game()
 # for id in [0,1]:
@@ -311,7 +312,7 @@ class CirullaGame:
 # print('current_player' + f": {state['current_player']}")
 
 # c=0
-# while game.is_over==False:
+# while game._is_over==False:
 #     c+=1
 #     possible_card= game.players[game.current_player_id].hand[0]
 #     next_state, current_player= game.step(possible_card)
