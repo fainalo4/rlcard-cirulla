@@ -25,13 +25,14 @@ class CirullaDealer:
             player.hand.append(self.deck.pop())
 
     def flip_top_4_cards(self):
-        ''' New deck and flip its top 4 cards when a new game starts 
+        ''' New deck, shuffle, flip its top 4 cards when a new game starts 
             and put them on the board with faces up
 
         Returns:
             list (object): The list of 4 Cards at the top of the deck
         '''
         self.deck= init_deck()
+        self.shuffle()
         top_4_cards = []
         for _ in range(4):
             top_4_cards.append(self.deck.pop(0))
