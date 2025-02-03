@@ -50,6 +50,9 @@ class CirullaGame:
                 (dict): The first state in one game
                 (int): Current player's id
         '''
+        self.__init__(allow_step_back= self.allow_step_back, 
+                      num_players= self.num_players)
+        
         flip_and_check_top_4_cards(self)
 
         # Deal 3 cards to each player to prepare for the game
@@ -216,7 +219,14 @@ class CirullaGame:
     def is_over(self):
         return self._is_over
 
+# # test initialization game 
 # game= CirullaGame()
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+# game.init_game()
+# print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
+# print(game.board.__str__())
+# game.init_game()
 # print(f"Player: {game.current_player_id}, points: {game.players[game.current_player_id].scopa_sum}")
 # print(game.board.__str__())
 # game.init_game()
